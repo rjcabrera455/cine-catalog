@@ -1,7 +1,6 @@
 import WatchedMovieItem from './WatchedMovieItem';
 
 function WatchedMovieList({ movies, onSelectMovie, onDeleteWatched }) {
-  console.log(movies);
   return (
     <ul>
       {movies.map((movie, index) => (
