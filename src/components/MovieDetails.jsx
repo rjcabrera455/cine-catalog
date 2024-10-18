@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import Loader from './Loader';
 import StarRating from './StarRating';
+import { useKey } from '../hooks/useKey';
 
-function MovieDetails({
-  selectedId,
-  apiKey,
-  onCloseMovie,
-  onAddWatched,
-  watched,
-}) {
+const apiKey = import.meta.env.VITE_API_KEY;
+
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState({});
   const [userRating, setUserRating] = useState(0);
+
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
   )?.UserRating;
+
   const countRef = useRef(0);
+
+  useKey('Escape', onCloseMovie);
 
   function handleAdd() {
     const watchedMovie = {
@@ -49,21 +51,6 @@ function MovieDetails({
     }
     getMovieDetails();
   }, [selectedId]);
-
-  // Close movie details
-  useEffect(() => {
-    function calback(e) {
-      if (e.code === 'Escape') {
-        onCloseMovie();
-      }
-    }
-
-    document.addEventListener('keydown', calback);
-
-    return function () {
-      document.removeEventListener('keydown', calback);
-    };
-  }, [onCloseMovie]);
 
   useEffect(() => {
     if (!movie.Title) return;
